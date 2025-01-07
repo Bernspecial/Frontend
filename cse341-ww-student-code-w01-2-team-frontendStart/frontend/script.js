@@ -1,14 +1,43 @@
 // helpful link for converting image to base64: https://elmah.io/tools/base64-image-encoder/
+// async function apiFetch(url) {
+//   const response = await fetch(url);
+//   const data = await response.json();
+//   return data;
+// }
+
+// const getData = async () => {
+//   const data = await apiFetch('http://localhost:8080/professional');
+//   displayAllData(data);
+// };
+
 async function apiFetch(url) {
-  const response = await fetch(url);
-  const data = await response.json();
-  return data;
+  try {
+    const response = await fetch(url);
+
+    // Check if the response is OK (status code 200-299)
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    // Attempt to parse the response as JSON
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    throw error; // Rethrow the error to handle it in getData
+  }
 }
 
 const getData = async () => {
-  const data = await apiFetch('http://localhost:8080/professional');
-  displayAllData(data);
+  try {
+    const data = await apiFetch('http://localhost:8080/professional');
+    displayAllData(data);
+  } catch (error) {
+    console.error("Error in getData:", error);
+    // Optionally, you can display an error message to the user here
+  }
 };
+
 
 function displayAllData(data) {
   displayProfessionalName(data.professionalName);
